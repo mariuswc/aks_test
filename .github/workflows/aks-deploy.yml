@@ -1,3 +1,27 @@
-git add .github/workflows/aks-deploy.yml
-git commit -m "Add GitHub Actions workflow for AKS deployment"
-git push origin main
+name: Deploy to AKS
+
+on:
+  push:
+    branches:
+      - main # Deploy when changes are pushed to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Azure CLI
+        uses: azure/setup-azurecli@v1
+      
+      - name: Login to Azure
+        run: |
+          echo "${{ secrets.AZURE_CLIENT_SECRET }}" | az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Get AKS credentials
+        run: az aks get-credentials --resource-group kubernetes_test --name aks_test
+
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f deploy.yml
