@@ -20,4 +20,9 @@ jobs:
 
     # Step 3: Login to Azure with Service Principal and debug information
     - name: Login to Azure
-      run
+      run: |
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }} --debug
+
+    # Step 4: Check Azure CLI version to verify setup
+    - name: Check Azure CLI version
+      run: az --version
