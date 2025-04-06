@@ -1,27 +1,25 @@
-name: Deploy to AKS
+name: Azure CI/CD Workflow
 
 on:
   push:
     branches:
-      - main # Deploy when changes are pushed to the main branch
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Set up Azure CLI
         uses: azure/setup-azurecli@v1
-      
-      - name: Login to Azure
-        run: |
-          echo "${{ secrets.AZURE_CLIENT_SECRET }}" | az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p --tenant ${{ secrets.AZURE_TENANT_ID }}
+        with:
+          version: '2.32.0'  # Optional, specify a version of Azure CLI
 
-      - name: Get AKS credentials
+      - name: Log in to Azure
+        run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Your Azure CLI command
         run: az aks get-credentials --resource-group kubernetes_test --name aks_test
-
-      - name: Deploy to AKS
-        run: |
-          kubectl apply -f deploy.yml
