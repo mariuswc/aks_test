@@ -16,7 +16,7 @@ jobs:
       - name: Set up Azure CLI
         uses: azure/setup-azurecli@v1
         with:
-          version: '2.32.0'  # Optional, specify a version of Azure CLI
+          version: '2.70.0'  # Optional, specify a version of Azure CLI
 
       - name: Log in to Azure
         run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
