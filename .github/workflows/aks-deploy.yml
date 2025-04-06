@@ -14,9 +14,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Step 2: Set up Azure CLI using latest version (fallback)
+    # Step 2: Set up Azure CLI using v2 (explicit version)
     - name: Set up Azure CLI
-      uses: azure/setup-azurecli@latest
+      uses: azure/setup-azurecli@v2
 
     # Step 3: Login to Azure with Service Principal and debug information
     - name: Login to Azure
