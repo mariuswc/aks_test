@@ -12,11 +12,11 @@ jobs:
     steps:
       # Sjekk ut koden fra GitHub
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Installer Azure CLI
       - name: Set up Azure CLI
-        uses: azure/setup-azurecli@v1.x
+        uses: azure/setup-azurecli@v1
         with:
           version: '2.0.0'  # optional: specify Azure CLI version if needed
 
