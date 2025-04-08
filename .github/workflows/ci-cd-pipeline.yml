@@ -10,26 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Sjekk ut koden fra GitHub
+      # Check out the code from GitHub
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Installer Azure CLI
-      - name: Set up Azure CLI
-        uses: azure/setup-azurecli@v2
-        with:
-          version: '2.0.0'  # optional: specify Azure CLI version if needed
+      # Install Azure CLI using a script (alternative to azure/setup-azurecli)
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+          az --version  # Verify installation
 
-
-      # Logg inn på Azure med Service Principal
+      # Log in to Azure with Service Principal
       - name: Log in to Azure
         run: |
           az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
-      # Hent AKS credentials
+      # Get AKS credentials
       - name: Get AKS credentials
-        run: az aks get-credentials --resource-group Kubernetes_test --name aks_test
+        run: |
+          az aks get-credentials --resource-group Kubernetes_test --name aks_test
 
-      # Deploy til AKS ved å bruke kubectl
+      # Set up kubectl and deploy to AKS
       - name: Deploy to AKS
-        run: kubectl apply -f k8s/deployment.yaml
+        run: |
+          # Install kubectl if not already present
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+          kubectl version --client  # Verify kubectl installation
+          kubectl apply -f k8s/deployment.yaml
