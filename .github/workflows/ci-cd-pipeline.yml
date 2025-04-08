@@ -29,7 +29,7 @@ jobs:
       # Step 4: Get AKS credentials
       - name: Get AKS credentials
         run: |
-          az aks get-credentials --resource-group your-resource-group --name your-aks-cluster
+          az aks get-credentials --resource-group Kubernetes_test --name aks_test
 
       # Step 5: Deploy the Kubernetes YAML configuration to AKS
       - name: Deploy to AKS
